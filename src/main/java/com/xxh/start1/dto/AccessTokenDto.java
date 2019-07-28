@@ -1,5 +1,8 @@
 package com.xxh.start1.dto;
 
+import lombok.Data;
+
+@Data
 public class AccessTokenDto {
     private  String client_id;
     private  String client_secret;
@@ -15,12 +18,12 @@ public class AccessTokenDto {
         this.client_id = client_id;
     }
 
-    public String getClient_secrect() {
+    public String getClient_secret() {
         return client_secret;
     }
 
-    public void setClient_secrect(String client_secrect) {
-        this.client_secret = client_secrect;
+    public void setClient_secret(String client_secret) {
+        this.client_secret = client_secret;
     }
 
     public String getCode() {

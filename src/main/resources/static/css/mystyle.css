@@ -1,0 +1,20 @@
+body{
+    background-color: wheat;
+}
+.main{
+    background-color:white;
+    margin:30px ;
+}
+.btn-publish{
+    float: right;
+    margin-bottom: 15px;
+}
+.media-object{
+    width: 43px;
+    height: 43px;
+}
+.text-desc{
+    font-size: 12px;
+    font-weight: 800;
+    color: #b35f5f
+}
