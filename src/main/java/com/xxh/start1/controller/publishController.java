@@ -1,27 +1,36 @@
 package com.xxh.start1.controller;
 
+import com.xxh.start1.dto.QuestionDTO;
 import com.xxh.start1.mapper.QuestionMapper;
 import com.xxh.start1.mapper.UserMapper;
 import com.xxh.start1.model.Question;
 import com.xxh.start1.model.User;
+import com.xxh.start1.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 
 @Controller
 public class publishController {
     @Autowired
-    private QuestionMapper questionMapper;
-    @Autowired
-    private UserMapper userMapper;
+    private QuestionService questionService;
+    @GetMapping("/publish/{id}")
+    public  String edit(@PathVariable(name = "id") Integer id,
+                        Model model){
+        QuestionDTO question = questionService.getById(id);
+        model.addAttribute("title",question.getTitle());
+        model.addAttribute("description",question.getDescription());
+        model.addAttribute("tag",question.getTag());
+        model.addAttribute("id",question.getId());
+        return "publish";
+    }
     @GetMapping("/publish")
     public  String publish()
     {
@@ -33,6 +42,7 @@ public class publishController {
             @RequestParam("title")String title,
             @RequestParam("description")String description,
             @RequestParam("tag")String tag,
+            @RequestParam("id")Integer id,
             HttpServletRequest request,
             Model model)
 
@@ -55,23 +65,7 @@ public class publishController {
             model.addAttribute("error","标签也是必填选项");
             return "publish";
         }
-
-
-
-        User user = null;
-        Cookie[] cookies = request.getCookies();
-        if(cookies!=null&&cookies.length!=0) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    user = userMapper.findBodyToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
+        User user=(User) request.getSession().getAttribute("user");
         if(user==null)
         {
             model.addAttribute("error","用户未登录");
@@ -84,7 +78,10 @@ public class publishController {
        question.setCreator(user.getId());
        question.setGmtCreate(System.currentTimeMillis());
        question.setGmtModified(question.getGmtCreate());
-       questionMapper.create(question);
+       question.setId(id);
+       questionService.createOrUpdate(question);
+
+
 
         return "redirect:/";
     }

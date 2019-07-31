@@ -5,6 +5,7 @@ import com.xxh.start1.dto.GitHubUser;
 import com.xxh.start1.mapper.UserMapper;
 import com.xxh.start1.model.User;
 import com.xxh.start1.provider.Githubprovider;
+import com.xxh.start1.service.UserService;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,8 @@ public class Aucontroller {
     private  String clientRedirecturi;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserService userService;
     @GetMapping("/callback")
 
     public String callback(@RequestParam(name ="code")String code,
@@ -53,19 +56,23 @@ public class Aucontroller {
             user.setToken(UUID.randomUUID().toString());
             user.setName(githubuser.getName());
             user.setAccountId(String.valueOf(githubuser.getId()));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubuser.getAvatar_url());
-            System.out.println(token);
-            userMapper.insert(user);
-            System.out.println("执行数据库插入之后："+user.getToken());
-
+            userService.createOrUpdate(user);
             response.addCookie(new Cookie("token",user.getToken()));
-            //request.getSession().setAttribute("user",user);
             return "redirect:/";
         }else
         {
                 return "redirect:/";
         }
+    }
+    @GetMapping("/logout")
+    public  String logout(HttpServletRequest request,
+                          HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie=new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return"redirect:/";
+
     }
 }
