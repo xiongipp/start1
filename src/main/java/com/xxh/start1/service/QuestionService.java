@@ -2,12 +2,14 @@ package com.xxh.start1.service;
 
 import com.xxh.start1.dto.PaginationDTO;
 import com.xxh.start1.dto.QuestionDTO;
+import com.xxh.start1.exception.CustomizeErrorCode;
+import com.xxh.start1.exception.CustomizeException;
+import com.xxh.start1.mapper.QuestionExtMapper;
 import com.xxh.start1.mapper.QuestionMapper;
 import com.xxh.start1.mapper.UserMapper;
 import com.xxh.start1.model.Question;
 import com.xxh.start1.model.QuestionExample;
 import com.xxh.start1.model.User;
-import com.xxh.start1.model.UserExample;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class QuestionService {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
     public PaginationDTO list(Integer page, Integer size) {
         //size*(page-1)
         Integer totalpage;
@@ -90,8 +94,11 @@ public class QuestionService {
 
     }
 
-    public QuestionDTO getById(Integer id) {
+    public QuestionDTO getById(Long id) {
         Question question=questionMapper.selectByPrimaryKey(id);
+        if (question==null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO= new  QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
         User user= userMapper.selectByPrimaryKey(question.getCreator());
@@ -101,6 +108,12 @@ public class QuestionService {
 
     public void createOrUpdate(Question question) {
         if(question.getId()==null){
+            //create
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            question.setViewCount(0);
+            question.setCommentCount(0);
+            question.setLikeCount(0);
             questionMapper.insert(question);
         }else{
             //update
@@ -112,8 +125,21 @@ public class QuestionService {
             QuestionExample example = new QuestionExample();
             example.createCriteria()
                     .andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion,example);
+            int updated=questionMapper.updateByExampleSelective(updateQuestion,example);
+            if(updated!=1){
+                throw  new  CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
+
+    }
+
+    public void incView(Long id) {
+
+        Question record = new Question();
+        record.setId(id);
+
+        record.setViewCount(1);
+        questionExtMapper.incView(record);
 
     }
 }

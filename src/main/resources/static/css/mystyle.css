@@ -1,5 +1,5 @@
 body{
-    background-color: wheat;
+    background-color: #f5ecef;
 }
 .main{
     background-color:white;
@@ -23,4 +23,7 @@ body{
 }
 .star1-menu{
     color: #afbdca;
+}
+.jumbotron{
+    margin:50px;
 }
