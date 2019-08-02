@@ -21,7 +21,7 @@ public class CommentController {
     public ResultDTO post(@RequestBody CommentDTO commentDTO,
                           HttpServletRequest request){
         User user=(User) request.getSession().getAttribute("user");
-      if(user==null){
+        if(user==null){
             return ResultDTO.errorof(CustomizeErrorCode.NO_LOGIN);
         }
         Comment comment = new Comment();
