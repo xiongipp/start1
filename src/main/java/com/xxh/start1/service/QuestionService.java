@@ -134,10 +134,8 @@ public class QuestionService {
     }
 
     public void incView(Long id) {
-
         Question record = new Question();
         record.setId(id);
-
         record.setViewCount(1);
         questionExtMapper.incView(record);
 

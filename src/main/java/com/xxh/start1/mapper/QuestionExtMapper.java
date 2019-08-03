@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface QuestionExtMapper {
     int incView(Question record);
-    int incCommentCountView(Question record);
+    int incCommentCount(Question record);
 }

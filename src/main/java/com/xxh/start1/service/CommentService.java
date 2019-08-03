@@ -42,7 +42,8 @@ public class CommentService {
             }
             commentMapper.insert(comment);
             question.setCommentCount(1);
-            questionExtMapper.incCommentCountView(question);
+            questionExtMapper.incCommentCount(question);
+
         }
 
 
