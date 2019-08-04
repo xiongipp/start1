@@ -1,5 +1,6 @@
 package com.xxh.start1.controller;
 
+import com.xxh.start1.dto.CommentDTO;
 import com.xxh.start1.dto.QuestionDTO;
 import com.xxh.start1.mapper.QuestionMapper;
 import com.xxh.start1.model.Question;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.constraints.Max;
+import java.util.List;
 
 @Controller
 public class QuestionController {
@@ -27,6 +29,7 @@ public class QuestionController {
        //累加阅读数
         questionService.incView(id);
        model.addAttribute("question",questionDTO);
+        model.addAttribute("comments",comments);
         return "question";
     }
 }
