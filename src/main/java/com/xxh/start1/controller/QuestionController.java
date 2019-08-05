@@ -2,6 +2,7 @@ package com.xxh.start1.controller;
 
 import com.xxh.start1.dto.CommentDTO;
 import com.xxh.start1.dto.QuestionDTO;
+import com.xxh.start1.enums.CommentTypeENum;
 import com.xxh.start1.mapper.QuestionMapper;
 import com.xxh.start1.model.Question;
 import com.xxh.start1.service.CommentService;
@@ -25,11 +26,11 @@ public class QuestionController {
     public  String question(@PathVariable(name = "id") Long id,
     Model model){
        QuestionDTO questionDTO= questionService.getById(id);
-       List<CommentDTO> comments= commentService.listByQuestionId(id);
+       List<CommentDTO> comments= commentService.listByTargetId(id, CommentTypeENum.QUESTION);
        //累加阅读数
         questionService.incView(id);
        model.addAttribute("question",questionDTO);
-        model.addAttribute("comments",comments);
+       model.addAttribute("comments",comments);
         return "question";
     }
 }

@@ -1,7 +1,9 @@
 package com.xxh.start1.controller;
 
 import com.xxh.start1.dto.CommentCreateDTO;
+import com.xxh.start1.dto.CommentDTO;
 import com.xxh.start1.dto.ResultDTO;
+import com.xxh.start1.enums.CommentTypeENum;
 import com.xxh.start1.exception.CustomizeErrorCode;
 import com.xxh.start1.model.Comment;
 import com.xxh.start1.model.User;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class CommentController {
@@ -38,5 +41,11 @@ public class CommentController {
         comment.setLikeCount(0L);
         commentService.insert(comment);
         return ResultDTO.okof();
+    }
+    @ResponseBody
+    @RequestMapping(value = "/comment/{id}",method = RequestMethod.GET)
+    public  ResultDTO comments(@PathVariable(name="id")Long id){
+        List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentTypeENum.COMMENT);
+        return ResultDTO.okof(commentDTOS);
     }
 }
