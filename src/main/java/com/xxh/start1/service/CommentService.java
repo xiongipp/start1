@@ -3,10 +3,7 @@ import com.xxh.start1.dto.CommentDTO;
 import com.xxh.start1.enums.CommentTypeENum;
 import com.xxh.start1.exception.CustomizeErrorCode;
 import com.xxh.start1.exception.CustomizeException;
-import com.xxh.start1.mapper.CommentMapper;
-import com.xxh.start1.mapper.QuestionExtMapper;
-import com.xxh.start1.mapper.QuestionMapper;
-import com.xxh.start1.mapper.UserMapper;
+import com.xxh.start1.mapper.*;
 import com.xxh.start1.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +26,11 @@ public class CommentService {
     private QuestionExtMapper questionExtMapper;
     @Autowired
     private  UserMapper usermapper;
+    @Autowired
+    private CommentExtMapper commentExtMapper;
     @Transactional
     public void insert(Comment comment) {
+
         if(comment.getParentId()==null||comment.getParentId()==0){
            throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         } if(comment.getType()==null||!CommentTypeENum.isExist(comment.getType())){
@@ -43,14 +43,25 @@ public class CommentService {
             if (dbComment==null){
                 throw  new  CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
+            System.out.println("开始插入");
             commentMapper.insert(comment);
+            //增加评论数
+            Comment ParentComment = new Comment();
+            ParentComment.setId(comment.getParentId());
+            System.out.println("设置评论ID成功");
+            ParentComment.setCommentCount(1);
+            System.out.println("设置评论数成功");
+            commentExtMapper.incCommentCount(ParentComment);
+            System.out.println("增加评论数成功");
         }else{
             //回复问题
             Question question=questionMapper.selectByPrimaryKey(comment.getParentId());
             if(question==null){
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+
             commentMapper.insert(comment);
+            //增加评论数
             question.setCommentCount(1);
             questionExtMapper.incCommentCount(question);
 

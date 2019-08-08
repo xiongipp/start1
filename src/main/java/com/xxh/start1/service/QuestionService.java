@@ -40,6 +40,8 @@ public class QuestionService {
             totalpage=totalcount/size+1;
         }
         Integer offset=size*(page-1);
+        QuestionExample questionExample=new QuestionExample();
+        questionExample.setOrderByClause("gmt_create desc");//按时间倒序排列
         //控制在页面列出的问题的条数
         List<Question> questions= questionMapper.selectByExampleWithBLOBsWithRowbounds(new QuestionExample(),new RowBounds(offset,size));
         List<QuestionDTO> questionDTOList=new ArrayList<>();

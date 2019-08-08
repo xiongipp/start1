@@ -98,7 +98,7 @@ function comment2target(targetId,type,content){
                         window.localStorage.setItem("closable",true);
                     }
                 }else{
-                    alert(response.message());
+                    alert(response.message);
                 }
 
             }
