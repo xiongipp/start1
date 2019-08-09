@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
@@ -42,6 +43,7 @@ public class CustomizeErrorController implements ErrorController {
             return HttpStatus.valueOf(statusCode);
         }
         catch (Exception ex) {
+            System.out.println(ex.getMessage());
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
     }

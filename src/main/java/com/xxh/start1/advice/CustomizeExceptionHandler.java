@@ -25,8 +25,10 @@ public class CustomizeExceptionHandler {
             //返回JSON
             if (e instanceof CustomizeException) {
                 resultDTO = ResultDTO.errorof((CustomizeException) e);
+                System.out.println(e.getMessage());
             } else {
                 resultDTO = ResultDTO.errorof(CustomizeErrorCode.SYS_ERROR);
+                System.out.println(e.getMessage());
             }
             try {
                 response.setContentType("application/json");
@@ -42,8 +44,10 @@ public class CustomizeExceptionHandler {
             //回到错误页面
             if(e instanceof CustomizeException){
                 model.addAttribute("message",e.getMessage());
+                System.out.println(e.getMessage());
             }else{
                model.addAttribute("message",CustomizeErrorCode.SYS_ERROR.getMessage());
+                System.out.println(e.getMessage());
             }
             return new ModelAndView("error");
         }
