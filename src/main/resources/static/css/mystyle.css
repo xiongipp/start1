@@ -83,3 +83,9 @@ body{
 .sub-comments .btn{
     margin: 10px;
 }
+.question-tag{
+    margin-right: 6px;
+}
+.img-style{
+    width: 100%;
+}

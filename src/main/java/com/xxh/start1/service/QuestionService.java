@@ -152,7 +152,7 @@ public class QuestionService {
             return new ArrayList<>();
         }
 
-        String[] tags = StringUtils.split(queryDTO.getTag(), ",");
+        String[] tags = StringUtils.split(queryDTO.getTag(), "，");
         String regexpTag = Arrays.stream(tags).collect(Collectors.joining("|"));
         Question question = new Question();
         question.setId(queryDTO.getId());
@@ -161,7 +161,7 @@ public class QuestionService {
         List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
             QuestionDTO questionDTO=new QuestionDTO();
             BeanUtils.copyProperties(q,questionDTO);
-            return new QuestionDTO();
+            return questionDTO;
         }).collect(Collectors.toList());
         return questionDTOS;
 
