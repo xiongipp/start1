@@ -1,5 +1,6 @@
 package com.xxh.start1.controller;
 
+import com.xxh.start1.cache.TagCache;
 import com.xxh.start1.dto.QuestionDTO;
 import com.xxh.start1.mapper.QuestionMapper;
 import com.xxh.start1.mapper.UserMapper;
@@ -29,11 +30,13 @@ public class publishController {
         model.addAttribute("description",question.getDescription());
         model.addAttribute("tag",question.getTag());
         model.addAttribute("id",question.getId());
+        model.addAttribute("tags",TagCache.get());
         return "publish";
     }
     @GetMapping("/publish")
-    public  String publish()
+    public  String publish(Model model)
     {
+        model.addAttribute("tags",TagCache.get());
         return "publish";
 
     }
@@ -50,6 +53,8 @@ public class publishController {
         model.addAttribute("title",title);
         model.addAttribute("description",description);
         model.addAttribute("tag",tag);
+        model.addAttribute("tags",TagCache.get());
+
         if(title==null||title=="")
         {
             model.addAttribute("error","标题不能为空");

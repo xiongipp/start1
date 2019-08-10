@@ -6,8 +6,10 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/mystyle.css">
+    <script src="/js/myJS.js"></script>
     <script src="/js/jquery.com/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+
 
 </head>
 <body>
@@ -15,24 +17,48 @@
 <div th:insert="~{navigation.html::nav}"></div>
 
 <div class="container-fluid main">
+    <!--左边9份-->
     <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
-            <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>发起</h2>
+      <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>发起</h2>
 
-        <hr>
+        <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <!--这里是发布问题表单-->
         <form action="/publish" method="post">
             <input type="hidden" name="id" th:value="${id}">
+            <!--问题标题输入框-->
             <div class="form-group">
                 <label for="title">问题标题(反正没人会)</label>
                 <input type="text" class="form-control" th:value="${title}" id="title"name="title" placeholder="问题标签">
             </div>
+            <!--问题描述输入框-->
             <div class="form-group">
                 <label for="description">问题补充</label>
                 <textarea name="description" th:text="${description}" id="description" cols="30" rows="10" class="form-control"></textarea>
             </div>
+            <!--问题标签输入框-->
             <div class="form-group">
                 <label for="tag">添加标签：</label>
-                <input type="text" class="form-control"th:value="${tag}" id="tag"name="tag" placeholder="输入标签，以逗号隔开">
+                <input type="text" class="form-control"th:value="${tag}" id="tag"name="tag" placeholder="输入标签，以逗号隔开"onclick="Showtag()">
             </div>
+            <!--标签-->
+                <div id="select-tag" style="display: none"class="publish-tag-table">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" th:each="selectcategory:${tags}"><a th:href="${'#'+selectcategory.categoryName}" aria-controls="home" role="tab" data-toggle="tab" th:text="${selectcategory.categoryName}"></a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane" th:id="${selectcategory.categoryName}" th:each="selectcategory:${tags}">
+                            <span class="label label-primary "th:each="selectTag:${selectcategory.tags}">
+                                <span class="glyphicon glyphicon-tag" onclick="selectTag(this)" th:text="${selectTag}"th:data-tag="${selectTag}"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+            <!--提问按钮-->
             <div class="container-fluid main">
                 <div class="row" >
                 <div class="alert alert-danger"th:text="${error}"th:if="${error!=null}"></div>
@@ -42,6 +68,7 @@
 
         </form>
         </div>
+    <!--右边3份-->
     <div class="col-lg-3 ol-md-12 col-sm-12 col-xs-12">
             <h3>问题发起指南</h3>
             <br>
