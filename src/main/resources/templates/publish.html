@@ -44,14 +44,14 @@
                 <div id="select-tag" style="display: none"class="publish-tag-table">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" th:each="selectcategory:${tags}"><a th:href="${'#'+selectcategory.categoryName}" aria-controls="home" role="tab" data-toggle="tab" th:text="${selectcategory.categoryName}"></a></li>
+                        <li role="presentation" th:each="selectcategory,selectcategoryStat:${tags}"th:class="${selectcategoryStat.first?'active':''}"><a th:href="${'#'+selectcategory.categoryName}" aria-controls="home" role="tab" data-toggle="tab" th:text="${selectcategory.categoryName}"></a></li>
                     </ul>
 
                     <!-- Tab panes -->
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane" th:id="${selectcategory.categoryName}" th:each="selectcategory:${tags}">
+                        <div role="tabpanel"th:id="${selectcategory.categoryName}" th:each="selectcategory:${tags}"th:class="${selectcategoryStat.first?'active tab-pane':'tab-pane'}">
                             <span class="label label-primary "th:each="selectTag:${selectcategory.tags}">
-                                <span class="glyphicon glyphicon-tag" onclick="selectTag(this)" th:text="${selectTag}"th:data-tag="${selectTag}"></span>
+                                <span class="glyphicon glyphicon-tag" onclick="selectTag(this)" th:text="${' '+selectTag}"th:data-tag="${selectTag}"></span>
                             </span>
                         </div>
                     </div>

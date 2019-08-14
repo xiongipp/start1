@@ -19,7 +19,7 @@ body{
 .text-desc{
     font-size: 12px;
     font-weight: 800;
-    color: #b35f5f
+    color:#999999
 }
 .profile .sec{
     margin-top:20px;
@@ -91,4 +91,9 @@ body{
 }
 .publish-tag-table{
     margin-top:20px;
+    padding-top: 10px;
+}
+.label-primary{
+    margin-right: 10px;
+    white-space: normal;
 }

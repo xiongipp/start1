@@ -25,5 +25,8 @@ create table USER
 );
 
 ##我也不知道这是啥
-mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+mvn -Dmybatiscreate.generator.overwrite=true mybatis-generator:generate
+             
+             
+
 

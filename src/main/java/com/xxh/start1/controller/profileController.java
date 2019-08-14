@@ -3,6 +3,7 @@ package com.xxh.start1.controller;
 import com.xxh.start1.dto.PaginationDTO;
 import com.xxh.start1.mapper.UserMapper;
 import com.xxh.start1.model.User;
+import com.xxh.start1.service.NotificationService;
 import com.xxh.start1.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,13 +14,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class profileController {
     @Autowired
     private QuestionService questionService;
     @Autowired
-    private UserMapper userMapper;
+    private NotificationService notificationService;
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name="action")String action,
                           Model model,
@@ -35,12 +37,17 @@ public class profileController {
         if("question".equals(action)){
             model.addAttribute("section","question");
             model.addAttribute("sectionName","我的问题");
+            PaginationDTO paginationDTO=questionService.list(user.getId(),page,size);
+            model.addAttribute("pagination",paginationDTO);
         }else if("replies".equals(action)){
+            PaginationDTO paginationDTO=notificationService.list(user.getId(),page,size);
+            Long unreadCount=notificationService.unreadCount(user.getId());
             model.addAttribute("section","replies");
+            model.addAttribute("pagination",paginationDTO);
+            model.addAttribute("unreadCount",unreadCount);
             model.addAttribute("sectionName","最新回复");
         }
-        PaginationDTO paginationDTO=questionService.list(user.getId(),page,size);
-        model.addAttribute("pagination",paginationDTO);
+
         return "profile";
     }
 }

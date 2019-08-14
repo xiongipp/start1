@@ -1,10 +1,12 @@
 package com.xxh.start1.dto;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
-
-public class PaginationDTO {
-    private List<QuestionDTO> questions;
+@Data
+public class PaginationDTO<T> {
+    private List<T> data;
     private boolean showPrevison;
     private  boolean showfirstpage;
     private  boolean shownext;
@@ -14,13 +16,6 @@ public class PaginationDTO {
     private  List<Integer> pages=new ArrayList<>();
 
 
-    public List<QuestionDTO> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<QuestionDTO> questions) {
-        this.questions = questions;
-    }
 
     public boolean isShowPrevison() {
         return showPrevison;

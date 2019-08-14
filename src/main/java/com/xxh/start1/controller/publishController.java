@@ -7,6 +7,7 @@ import com.xxh.start1.mapper.UserMapper;
 import com.xxh.start1.model.Question;
 import com.xxh.start1.model.User;
 import com.xxh.start1.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,7 +68,12 @@ public class publishController {
         }
         if(tag==null||tag=="")
         {
-            model.addAttribute("error","标签也是必填选项");
+            model.addAttribute("error","标签不能为空");
+            return "publish";
+        }
+        String invalid = TagCache.filterInvalid(tag);
+        if(StringUtils.isNoneBlank(invalid)){
+            model.addAttribute("error","非法标签输入："+invalid);
             return "publish";
         }
         User user=(User) request.getSession().getAttribute("user");
