@@ -41,8 +41,14 @@
                 $(function() {
                     var editor = editormd("question-editor", {
                          width  : "100%",
-                         height : "100%",
-                        path   : "/js/lib/"
+                         height :  350,
+                         path   : "/js/lib/",
+                         dely:0,
+                        watch:false,
+                        placeholder:"输入问题描述",
+                        imageUpload          : true,          // Enable/disable upload
+                        imageFormats         : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                        imageUploadURL       : "/file/upload",             // Upload url
                     });
                 });
             </script>
