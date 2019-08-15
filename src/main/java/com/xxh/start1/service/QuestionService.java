@@ -35,7 +35,10 @@ public class QuestionService {
         Integer totalpage;
         PaginationDTO paginationDTO=new PaginationDTO();
         //数据库中总问题数
-        Integer totalcount=(int)questionMapper.countByExample(new QuestionExample());
+        QuestionExample questionExample = new QuestionExample();
+
+        Integer totalcount=(int)questionMapper.countByExample(questionExample);
+        questionExample.setOrderByClause("gmt_create desc");
         //这两个if算出总页数totalpage!
         if(totalcount%size==0){
             totalpage=totalcount/size;
@@ -44,8 +47,7 @@ public class QuestionService {
             totalpage=totalcount/size+1;
         }
         Integer offset=size*(page-1);
-        QuestionExample questionExample=new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");//按时间倒序排列
+
         //控制在页面列出的问题的条数
         List<Question> questions= questionMapper.selectByExampleWithBLOBsWithRowbounds(new QuestionExample(),new RowBounds(offset,size));
         List<QuestionDTO> questionDTOList=new ArrayList<>();

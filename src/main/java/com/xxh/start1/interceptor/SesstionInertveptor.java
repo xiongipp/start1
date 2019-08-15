@@ -3,6 +3,7 @@ package com.xxh.start1.interceptor;
 import com.xxh.start1.mapper.UserMapper;
 import com.xxh.start1.model.User;
 import com.xxh.start1.model.UserExample;
+import com.xxh.start1.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -17,13 +18,14 @@ import java.util.List;
 public class SesstionInertveptor implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private NotificationService notificationService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[] cookies = request.getCookies();
         if(cookies!=null&&cookies.length!=0) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {
-                    System.out.println("拿到用户的token了!");
                     String token = cookie.getValue();
                     System.out.println(token);
                     UserExample userexample = new UserExample();
@@ -32,7 +34,8 @@ public class SesstionInertveptor implements HandlerInterceptor {
                     List<User> users=userMapper.selectByExample(userexample);
                     if (users.size()!=0) {
                         request.getSession().setAttribute("user", users.get(0));
-                        System.out.println("用户存在");
+                        Long unreadCount=notificationService.unreadCount(users.get(0).getId());
+                        request.getSession().setAttribute("unreadMessage",unreadCount);
                     }
                     break;
                 }

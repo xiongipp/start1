@@ -50,6 +50,7 @@ public class NotificationService {
         NotifiedExample example=new NotifiedExample();
         example.createCriteria()
                 .andReceiverEqualTo(userId);
+        example.setOrderByClause("gmt_create desc");
         List<Notified> notifieds= notifiedMapper.selectByExampleWithRowbounds(example,new RowBounds(offset,size));
         if(notifieds.size()==0){
             return paginationDTO;
@@ -58,7 +59,9 @@ public class NotificationService {
         for (Notified notified : notifieds) {
             NotificationDTO notificationDto = new NotificationDTO();
             BeanUtils.copyProperties(notified,notificationDto);
+            notificationDto.setOuterid(notified.getOuterid());
             notificationDto.setTypeName(NotificationTypeEnum.nameOfType(notified.getType()));
+            notificationDto.setId(notified.getId());
             notificationDTOS.add(notificationDto);
         }
         paginationDTO.setData(notificationDTOS);
@@ -69,13 +72,14 @@ public class NotificationService {
     public Long unreadCount(Integer userId) {
         NotifiedExample notifiedExample = new NotifiedExample();
         notifiedExample.createCriteria()
-                .andReceiverEqualTo(userId);
+                .andReceiverEqualTo(userId)
+                .andStatusEqualTo(NotificationStatusEnum.UNREAD.getStatus());
         return  notifiedMapper.countByExample(notifiedExample);
     }
 
-    public NotificationDTO read(Integer id, User user) {
+    public NotificationDTO read(Long id, User user) {
         Notified notified = notifiedMapper.selectByPrimaryKey(id);
-        if(notified.getReceiver()!=user.getId()){
+      if(!notified.getReceiver().equals(user.getId())){
             throw new CustomizeException(CustomizeErrorCode.READ_NOTIFICATION_FAIL);
         }
         notified.setStatus(NotificationStatusEnum.READ.getStatus());

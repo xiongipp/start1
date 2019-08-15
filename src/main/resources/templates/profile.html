@@ -45,6 +45,7 @@
                     <p class="media-heading">
                         <a th:href="@{'/notification/'+${notification.id}}" th:text="${notification.outerTitle}">
                         </a>
+                        <span class="label label-danger"th:if="${notification.status==0}">未读</span>
                     </p>
                 </div>
             </div>
@@ -78,7 +79,7 @@
             <a href="/profile/question" th:class="${section=='question'}? 'active list-group-item ': 'list-group-item'" >我的问题</a>
             <a href="/profile/replies" th:class="${section=='replies'}? 'active list-group-item ' : 'list-group-item '" >
                 最新回复
-                <span class="badge" th:text="${unreadCount}"></span>
+                <span class="badge" th:text="${session.unreadMessage}"></span>
             </a>
 
         </div>
